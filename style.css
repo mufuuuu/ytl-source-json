@@ -25,9 +25,7 @@
 :root {
   --header-height: 54px;
   --chennel-list-height: 54px;
-  --input-container-height: 108px;
-  --list-height: 54px;
-  --footer-height: 28px;
+  --search-list-height: 54px;
 }
 
 :where(:root *) {
@@ -106,6 +104,10 @@ header h1 {
   border-color: red;
 }
 
+.input-container {
+  padding: 8px 0;
+}
+
 input[type="text"],
 input[type="search"],
 textarea {
@@ -162,15 +164,13 @@ textarea:not([readonly]):focus + .underline .focused {
 }
 
 #search-list {
-  height: calc(100vh - var(--header-height) - var(--input-container-height) - var(--footer-height));
-  max-height: 100%;
   overflow: auto;
 }
 
 .list-item {
   display: flex;
   position: relative;
-  height: var(--list-height);
+  height: var(--search-list-height);
   background-color: white;
 }
 
@@ -229,7 +229,7 @@ textarea:not([readonly]):focus + .underline .focused {
 
 .title,
 .detail {
-  height: calc(var(--list-height) / 2);
+  height: calc(var(--search-list-height) / 2);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -291,8 +291,8 @@ textarea:not([readonly]):focus + .underline .focused {
 
 .list-button {
   display: block;
-  width: var(--list-height);
-  height: var(--list-height);
+  width: var(--search-list-height);
+  height: var(--search-list-height);
   background-color: transparent;
   border: none;
   cursor: pointer;
@@ -340,6 +340,7 @@ textarea:not([readonly]):focus + .underline .focused {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .bottom-message.error {
