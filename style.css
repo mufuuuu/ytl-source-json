@@ -341,6 +341,7 @@ textarea:not([readonly]):focus + .underline .focused {
   text-overflow: ellipsis;
   white-space: nowrap;
   flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .bottom-message.error {
