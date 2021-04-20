@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="style.css">
+  <title>mufuuuu timestamp search</title>
+  <script src="main.js"></script>
+</head>
+<body>
+  <header>
+    <h1>mufuuuu timestamp search</h1>
+  </header>
+  <div id="search" class="flex-container">
+    <div id="search-container" class="flex-container">
+      <div class="channel-container flex">
+        <ul id="channel-list" class="list-container" value="All">
+          <li class="channel-list-item active" value="All">
+            <span>All</span>
+          </li>
+          <li class="channel-list-item" value="Siro Channel" title="Siro Channel">
+            <img class="thumbnail" src="img/siro.jpg">
+          </li>
+          <!-- 
+          <li class="channel-list-item" value="木曽あずき" title="木曽あずき">
+            <img class="thumbnail" src="img/azuki.jpg">
+          </li>
+           -->
+          <li class="channel-list-item" value="花京院ちえり" title="花京院ちえり">
+            <img class="thumbnail" src="img/chieri.jpg">
+          </li>
+          <li class="channel-list-item" value="もこ田めめめ" title="もこ田めめめ">
+            <img class="thumbnail" src="img/mememe.jpg">
+          </li>
+          <!-- 
+          <li class="channel-list-item" value="牛巻りこ" title="牛巻りこ">
+            <img class="thumbnail" src="img/riko.jpg">
+          </li>
+           -->
+          <li class="channel-list-item" value="北上双葉" title="北上双葉">
+            <img class="thumbnail" src="img/futaba.jpg">
+          </li>
+          <li class="channel-list-item" value="カルロ・ピノ" title="カルロ・ピノ">
+            <img class="thumbnail" src="img/pino.jpg">
+          </li>
+          <li class="channel-list-item" value="八重沢なとり" title="八重沢なとり">
+            <img class="thumbnail" src="img/natori.jpg">
+          </li>
+          <li class="channel-list-item" value="金剛いろは" title="金剛いろは">
+            <img class="thumbnail" src="img/iroha.jpg">
+          </li>
+          <li class="channel-list-item" value="ヤマト イオリ" title="ヤマト イオリ">
+            <img class="thumbnail" src="img/iori.jpg">
+          </li>
+          <li class="channel-list-item" value="神楽すず" title="神楽すず">
+            <img class="thumbnail" src="img/suzu.jpg">
+          </li>
+          <li class="channel-list-item" value="メリーミルクの森" title="メリーミルクの森">
+            <img class="thumbnail" src="img/merry.jpg">
+          </li>
+          <li class="channel-list-item" value="七星みりり" title="七星みりり">
+            <img class="thumbnail" src="img/milily.jpg">
+          </li>
+          <li class="channel-list-item" value="リクム" title="リクム">
+            <img class="thumbnail" src="img/rikumu.jpg">
+          </li>
+          <li class="channel-list-item" value="ルルン・ルルリカ" title="ルルン・ルルリカ">
+            <img class="thumbnail" src="img/rurun.jpg">
+          </li>
+          <li class="channel-list-item" value="【世界初?!】男性バーチャルYouTuber ばあちゃる" title="【世界初?!】男性バーチャルYouTuber ばあちゃる">
+            <img class="thumbnail" src="img/baacharu.jpg">
+          </li>
+          <li class="channel-list-item" value="どっとライブ" title="どっとライブ">
+            <img class="thumbnail" src="img/dotlive.jpg">
+          </li>
+          <li class="channel-list-item" value="夜桜たま" title="夜桜たま">
+            <img class="thumbnail" src="img/tama.jpg">
+          </li>
+          <li class="channel-list-item" value="猫乃木もち" title="猫乃木もち">
+            <img class="thumbnail" src="img/mochi.jpg">
+          </li>
+          <li class="channel-list-item" value="etc" title="etc">
+            <span>etc</span>
+          </li>
+        </ul>
+      </div>
+      <div class="input-container flex">
+        <input id="search-input" type="search" placeholder="Search timestamps..."></input>
+        <div class="underline">
+          <div class="unfocused"></div>
+          <div class="focused"></div>
+        </div>
+      </div>
+    </div>
+    <ul id="search-list" class="list-container flex">
+      <li id="search-control-top" class="list-control hidden">
+        <button id="search-prev-button" class="list-control-button" title="Prev">Prev</button>
+      </li>
+      <li id="search-control-bottom" class="list-control hidden">
+        <button id="search-next-button" class="list-control-button" title="Next">Next</button>
+      </li>
+    </ul>
+    <div id="search-message" class="bottom-message flex"></div>
+  </div>
+</body>
+</html>
