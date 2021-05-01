@@ -10,10 +10,10 @@
   <header>
     <h1>mufuuuu timestamp search beta</h1>
   </header>
-  <div id="search" class="flex-container">
-    <div id="search-container" class="flex-container">
+  <div id="search" class="flex-container flex-direction-column">
+    <div id="search-container" class="flex-container flex-direction-column">
       <div class="channel-container flex">
-        <ul id="channel-list" class="list-container" value="All">
+        <ul id="channel-list" class="flex-container flex-wrap flex-gap" value="All">
           <li class="channel-list-item active" value="All">
             <span>All</span>
           </li>
@@ -83,11 +83,18 @@
           </li>
         </ul>
       </div>
-      <div class="input-container flex">
-        <input id="search-input" type="search" placeholder="Search timestamps..."></input>
-        <div class="underline">
-          <div class="unfocused"></div>
-          <div class="focused"></div>
+      <div class="input-container flex-container flex-gap flex">
+        <div class="flex">
+          <input id="search-input" type="search" placeholder="Search timestamps..."></input>
+          <div class="underline">
+            <div class="unfocused"></div>
+            <div class="focused"></div>
+          </div>
+        </div>
+        <button id="share-button" class="material-button" title="share"><span class="material-icons">share</span></button>
+        <div id="share-popup" class="flex-container flex-gap">
+          <input id="share-url-input" type="text" onclick="this.select()" readonly></input>
+          <button id="copy-button" class="material-button" title="copy"><span class="material-icons">content_copy</span></button>
         </div>
       </div>
     </div>
