@@ -8,24 +8,6 @@
                 this.results = [];
                 this.thumbnailURLs = {};
             }
-            buttonHandler(buttonId) {
-                switch (buttonId) {
-                    case 'search-exec-button': {
-                        this.currentIndex = 0;
-                        this.focusIndex = 0;
-                        this.exec(this.getSearchParameters());
-                        break;
-                    }
-                    case 'search-prev-button': {
-                        this.loadPrevItems();
-                        break;
-                    }
-                    case 'search-next-button': {
-                        this.loadNextItems();
-                        break;
-                    }
-                }
-            }
             load() {
                 const url = 'https://raw.githubusercontent.com/mufuuuu/ytl-source-json/master/timestamp.json';
                 fetch(url, {cache: 'no-cache'})
@@ -73,7 +55,12 @@
                                             if(site in this.thumbnailURLs === false) {
                                                 this.thumbnailURLs[site] = {};
                                             }
-                                            this.thumbnailURLs[site][json.body.playback.v_id] = `https://vpic-mildom-com.cdn.ampproject.org/ii/w128/s/${result[1]}`;
+                                            const thumbnailURL = `https://vpic-mildom-com.cdn.ampproject.org/ii/w128/s/${result[1]}`;
+                                            this.thumbnailURLs[site][json.body.playback.v_id] = thumbnailURL;
+                                            const thumbnails = Array.from(document.querySelectorAll(`.thumbnail[key="${key}"]`));
+                                            thumbnails.forEach(thumbnail => {
+                                                thumbnail.src = thumbnailURL;
+                                            });
                                         }
                                         return 'resolved';
                                     });
@@ -90,7 +77,12 @@
                                             if(site in this.thumbnailURLs == false) {
                                                 this.thumbnailURLs[site] = {};
                                             }
-                                            this.thumbnailURLs[site][json.data.bvid] = `${json.data.pic}@128w_72h_100Q_1c.webp`;
+                                            const thumbnailURL = `${json.data.pic}@128w_72h_100Q_1c.webp`;
+                                            this.thumbnailURLs[site][json.data.bvid] = thumbnailURL;
+                                            const thumbnails = Array.from(document.querySelectorAll(`.thumbnail[key="${key}"]`));
+                                            thumbnails.forEach(thumbnail => {
+                                                thumbnail.src = thumbnailURL;
+                                            });
                                         }
                                         return 'resolved';
                                     });
@@ -102,7 +94,7 @@
                     promises.flat();
                     Promise.allSettled(promises).then(() => {
                         this.setEventlistener();
-                        this.focus();
+                        this.loadURLSearchParams();
                     });
                 })
                     .catch(e => {
@@ -160,16 +152,12 @@
                 const channelListItems = document.querySelectorAll('#channel-list .channel-list-item');
                 channelListItems.forEach(channelListItem => {
                     channelListItem.addEventListener('click', e => {
-                        const activeItem = document.querySelector('#channel-list .channel-list-item.active');
-                        activeItem.classList.remove('active');
                         let target = e.target;
                         if(target.className != 'channel-list-item') {
                             target = target.parentNode;
                         }
-                        target.classList.add('active');
                         let value = target.getAttribute('value');
-                        const channelList = document.getElementById('channel-list');
-                        channelList.setAttribute('value', value);
+                        this.setChannel(value);
                         this.currentIndex = 0;
                         this.focusIndex = 0;
                         this.exec(this.getSearchParameters());
@@ -194,10 +182,76 @@
                         this.savedIndex = this.currentIndex;
                     }
                 }, false);
+                const shareButton = document.getElementById('share-button');
+                shareButton.addEventListener('click', e => {
+                    const sharePopup = document.getElementById('share-popup');
+                    if(sharePopup.classList.contains('active')) {
+                        sharePopup.classList.remove('active');
+                    }else {
+                        sharePopup.classList.add('active');
+                        const shareURLInput = document.getElementById('share-url-input');
+                        shareURLInput.value = this.getShareURL();
+                    }
+                });
+                const copyButton = document.getElementById('copy-button');
+                copyButton.addEventListener('click', e => {
+                    const shareURLInput = document.getElementById('share-url-input');
+                    navigator.clipboard.writeText(shareURLInput.value);
+                });
+                document.addEventListener('click', e => {
+                    let target = e.target;
+                    const sharePopup = document.getElementById('share-popup');
+                    const shareButton = document.getElementById('share-button');
+                    while (target && (target != document.body)) {
+                        if (target == sharePopup || target == shareButton) return;
+                        target = target.parentNode;
+                    }
+                    sharePopup.classList.remove('active');
+                });
             }
             focus() {
                 const parent = document.getElementById('search-input');
                 parent.focus();
+            }
+            setChannel(channel) {
+                const activeItem = document.querySelector('#channel-list .channel-list-item.active');
+                const targetItem = document.querySelector(`#channel-list .channel-list-item[value="${channel}"]`);
+                if(targetItem) {
+                    activeItem.classList.remove('active');
+                    targetItem.classList.add('active');
+                    const channelList = document.getElementById('channel-list');
+                    channelList.setAttribute('value', channel);
+                }
+            }
+            setWord(word) {
+                const parent = document.getElementById('search-input');
+                parent.value = word;
+            }
+            loadURLSearchParams() {
+                const url = new URL(window.location);
+                const params = url.searchParams;
+                this.setChannel(params.get('channel'));
+                this.setWord(params.get('q'));
+                this.currentIndex = 0;
+                this.focusIndex = 0;
+                this.exec(this.getSearchParameters());
+                this.focus();
+            }
+            getShareURL() {
+                const url = new URL(window.location);
+                const params = url.searchParams;
+                const newParams = this.getSearchParameters();
+                if(newParams.word) {
+                    params.set('q', newParams.word);
+                }else {
+                    params.delete('q');
+                }
+                if(newParams.channel && newParams.channel != 'All') {
+                    params.set('channel', newParams.channel);
+                }else {
+                    params.delete('channel');
+                }
+                return url.href;
             }
             getVisibleIndex() {
                 const parent = document.getElementById('search-list');
@@ -442,7 +496,7 @@
                 const listItem = document.createElement('li');
                 listItem.classList.add('list-item');
                 listItem.setAttribute('index', result.index);
-                listItem.innerHTML = `<a class="link-button" href="${urls[0]}" target="_blank" rel="noopener" title="${tooltipArray.join('\n')}"><img class="thumbnail" src="${thumbnailSrc}"><div class="title-container"><div class="title">${result.string}</div><div class="detail"><span class="site-icon ${result.site}"></span>${detailArray.join(' - ') || urls[0]}</div></div></a>`;
+                listItem.innerHTML = `<a class="link-button" href="${urls[0]}" target="_blank" rel="noopener" title="${tooltipArray.join('\n')}"><img class="thumbnail" src="${thumbnailSrc}" key="${result.key}"><div class="title-container"><div class="title">${result.string}</div><div class="detail"><span class="site-icon ${result.site}"></span>${detailArray.join(' - ') || urls[0]}</div></div></a>`;
                 /*
                 let title = listItem.querySelector('.title');
                 result.match.forEach(match => {

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Icons');
 /* Color emoji support */
 /* https://necomesi.jp/blog/tsmd/posts/154 */
 @font-face {
@@ -25,6 +26,7 @@
 :root {
   --header-height: 54px;
   --chennel-list-height: 54px;
+  --search-input-height: 32px;
   --search-list-height: 54px;
 }
 
@@ -51,6 +53,18 @@ textarea {
   flex: 1 1 auto;
 }
 
+.flex-direction-column {
+  flex-direction: column;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-gap {
+  gap: 8px;
+}
+
 body {
   position: absolute;
   width: 100%;
@@ -65,23 +79,16 @@ header {
 }
 
 header h1 {
+  white-space: nowrap;
   line-height: var(--header-height);
 }
 
 #search {
   height: calc(100% - var(--header-height));
-  flex-direction: column;
 }
 
 #search-container {
-  flex-direction: column;
   padding: 0 8px;
-}
-
-#channel-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 .channel-list-item {
@@ -105,7 +112,9 @@ header h1 {
 }
 
 .input-container {
+  position: relative;
   padding: 8px 0;
+  height: var(--search-input-height);
 }
 
 input[type="text"],
@@ -162,6 +171,52 @@ input[type="search"]:not([readonly]):focus + .underline .focused,
 textarea:not([readonly]):focus + .underline .focused {
   transform: none;
 }
+
+#share-popup {
+  position: absolute;
+  width: 360px;
+  bottom: 54px;
+  right: 0;
+  padding: 8px;
+  border-radius: 4px;
+  background-color: #333;
+}
+
+#share-popup * {
+  color: white;
+}
+
+#share-popup:not(.active) {
+  display: none;
+}
+
+#share-url-input {
+  font-size: 100%;
+}
+
+#share-popup::after {
+  content: "";
+  display: block;
+  position: absolute;
+  bottom: -16px;
+  right: 8px;
+  border: 8px solid transparent;
+  border-top-color: #333;
+}
+
+.material-button {
+  width: var(--search-input-height);
+  background-color: transparent;
+  border: none;
+  opacity: .8;
+  transition-duration: .2s;
+  cursor: pointer;
+}
+
+.material-button:hover {
+  opacity: 1;
+}
+
 
 #search-list {
   overflow: auto;
