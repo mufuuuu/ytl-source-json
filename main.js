@@ -652,5 +652,6 @@ class Main {
         }, false);
     }
 }
+
 const main = new Main();
 main.load();
