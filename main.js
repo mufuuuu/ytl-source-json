@@ -329,15 +329,10 @@ class Main {
             width: playerWidth,
             videoId: key,
             playerVars: {
-                'start': time
-            },
-            events: {
-                'onReady': onPlayerReady
+                'start': time,
+                'autoplay': 1
             }
         });
-        function onPlayerReady(event) {
-            event.target.playVideo();
-        }
     }
     closeEmbeddedPlayer() {
         const modal = document.getElementById('modal');
@@ -652,6 +647,5 @@ class Main {
         }, false);
     }
 }
-
 const main = new Main();
 main.load();
