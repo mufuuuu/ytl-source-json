@@ -319,8 +319,8 @@ class Main {
         this.closeEmbeddedPlayer();
         const modal = document.getElementById('modal');
         modal.classList.add('active');
-        const playerWidth = Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8;
-        const playerHeight = playerWidth * 9 / 16;
+        const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
+        const playerHeight = Math.round(playerWidth * 9 / 16);
 
         const key = listItem.getAttribute('key');
         const time = listItem.getAttribute('time');
@@ -328,12 +328,14 @@ class Main {
             height: playerHeight,
             width: playerWidth,
             videoId: key,
+            playerVars: {
+                'start': time
+            },
             events: {
                 'onReady': onPlayerReady
             }
         });
         function onPlayerReady(event) {
-            event.target.seekTo(time);
             event.target.playVideo();
         }
     }

@@ -362,6 +362,10 @@ textarea:not([readonly]):focus + .underline .focused {
   opacity: 1;
 }
 
+.list-button[command="play"]:hover {
+  color: #40bf40;
+}
+
 .list-item:not([site="youtube"]) .list-button[command="play"] {
   display: none;
 }
