@@ -350,12 +350,20 @@ textarea:not([readonly]):focus + .underline .focused {
   height: var(--search-list-height);
   background-color: transparent;
   border: none;
+  font-size: calc(var(--search-list-height) - 20px);
+  padding: 10px;
+  box-sizing: border-box;
   cursor: pointer;
+  user-select: none;
   opacity: .6;
 }
 
 .list-button:hover {
   opacity: 1;
+}
+
+.list-item:not([site="youtube"]) .list-button[command="play"] {
+  display: none;
 }
 
 #link-menu {
@@ -402,4 +410,20 @@ textarea:not([readonly]):focus + .underline .focused {
 .bottom-message.error {
   background-color: darkred;
   color: white;
+}
+
+#modal {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, .75);
+}
+
+#modal.active {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
