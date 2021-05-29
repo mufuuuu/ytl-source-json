@@ -360,7 +360,6 @@ class Main {
                     linkMenu.remove();
                     document.body.removeEventListener('click', removeLinkMenu, false);
                     const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
-                    console.log(target);
                     target.focus();
                     const modal = document.getElementById('modal');
                     modal.classList.add('active');
@@ -395,7 +394,6 @@ class Main {
                             linkMenu.remove();
                             document.body.removeEventListener('click', removeLinkMenu, false);
                             const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
-                            console.log(target);
                             target.focus();
                             const modal = document.getElementById('modal');
                             modal.classList.add('active');
@@ -417,7 +415,6 @@ class Main {
                             linkMenu.remove();
                             document.body.removeEventListener('click', removeLinkMenu, false);
                             const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
-                            console.log(target);
                             target.focus();
                         }
                     }
@@ -434,7 +431,6 @@ class Main {
 
             document.body.addEventListener('click', removeLinkMenu, false);
             function removeLinkMenu(e) {
-                console.log(e);
                 let target = e.target;
                 while (target && (target != document.body)) {
                     if (target.classList.contains('list-button') && target.parentNode.getAttribute('index') == index.toString()) return;
