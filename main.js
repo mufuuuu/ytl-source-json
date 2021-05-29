@@ -357,6 +357,11 @@ class Main {
                 linkList.appendChild(linkListItem);
                 a.addEventListener('click', e => {
                     e.preventDefault();
+                    linkMenu.remove();
+                    document.body.removeEventListener('click', removeLinkMenu, false);
+                    const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
+                    console.log(target);
+                    target.focus();
                     const modal = document.getElementById('modal');
                     modal.classList.add('active');
                     const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
@@ -387,6 +392,11 @@ class Main {
                             }
                         }else if(e.keyCode == 39) {
                             e.preventDefault();
+                            linkMenu.remove();
+                            document.body.removeEventListener('click', removeLinkMenu, false);
+                            const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
+                            console.log(target);
+                            target.focus();
                             const modal = document.getElementById('modal');
                             modal.classList.add('active');
                             const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
@@ -402,11 +412,12 @@ class Main {
                                     'autoplay': 1
                                 }
                             });
-                        }else if(e.keyCode == 37 || e.keyCode == 8) {
+                        }else if(e.keyCode == 37 || e.keyCode == 27 || e.keyCode == 8) {
                             e.preventDefault();
                             linkMenu.remove();
                             document.body.removeEventListener('click', removeLinkMenu, false);
                             const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
+                            console.log(target);
                             target.focus();
                         }
                     }
@@ -713,7 +724,7 @@ class Main {
                             }else if(e.keyCode == 39) {
                                 e.preventDefault();
                                 e.target.click();
-                            }else if(e.keyCode == 37 || e.keyCode == 8) {
+                            }else if(e.keyCode == 37 || e.keyCode == 27 || e.keyCode == 8) {
                                 e.preventDefault();
                                 linkMenu.remove();
                                 document.body.removeEventListener('click', removeLinkMenu, false);
