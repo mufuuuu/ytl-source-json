@@ -317,22 +317,122 @@ class Main {
     }
     playEmbeddedPlayer(listItem) {
         this.closeEmbeddedPlayer();
-        const modal = document.getElementById('modal');
-        modal.classList.add('active');
-        const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
-        const playerHeight = Math.round(playerWidth * 9 / 16);
 
+        const index = listItem.getAttribute('index');
         const key = listItem.getAttribute('key');
-        const time = listItem.getAttribute('time');
-        new YT.Player('player', {
-            height: playerHeight,
-            width: playerWidth,
-            videoId: key,
-            playerVars: {
-                'start': time,
-                'autoplay': 1
+        const ankers = listItem.getAttribute('anker').split(', ');
+        const times = listItem.getAttribute('time').split(', ');
+        if(times.length == 1) {
+            const modal = document.getElementById('modal');
+            modal.classList.add('active');
+            const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
+            const playerHeight = Math.round(playerWidth * 9 / 16);
+
+            const time = times[0];
+            new YT.Player('player', {
+                height: playerHeight,
+                width: playerWidth,
+                videoId: key,
+                playerVars: {
+                    'start': time,
+                    'autoplay': 1
+                }
+            });
+        }else {
+            let linkMenu = document.getElementById('link-menu');
+            if(linkMenu) linkMenu.remove();
+            linkMenu = document.createElement('div');
+            linkMenu.id = 'link-menu';
+            const linkList = document.createElement('ul');
+            linkList.id = 'link-list';
+            for(let i = 0; i < times.length; i++) {
+                const linkListItem = document.createElement('li');
+                linkListItem.className = 'link-list-item';
+                const a = document.createElement('a');
+                a.className = 'link-list-item-button';
+                a.href = '#';
+                a.setAttribute('index', i);
+                a.textContent = ankers[i];
+                linkListItem.appendChild(a);
+                linkList.appendChild(linkListItem);
+                a.addEventListener('click', e => {
+                    e.preventDefault();
+                    const modal = document.getElementById('modal');
+                    modal.classList.add('active');
+                    const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
+                    const playerHeight = Math.round(playerWidth * 9 / 16);
+
+                    const time = times[e.target.getAttribute('index')];
+                    new YT.Player('player', {
+                        height: playerHeight,
+                        width: playerWidth,
+                        videoId: key,
+                        playerVars: {
+                            'start': time,
+                            'autoplay': 1
+                        }
+                    });
+                }, false);
+                a.addEventListener('keydown', e => {
+                    if(e.target.className == 'link-list-item-button') {
+                        if(e.keyCode == 40) {
+                            if(e.target.parentNode.nextElementSibling) {
+                                e.preventDefault();
+                                e.target.parentNode.nextElementSibling.firstChild.focus();
+                            }
+                        }else if(e.keyCode == 38) {
+                            if(e.target.parentNode.previousElementSibling) {
+                                e.preventDefault();
+                                e.target.parentNode.previousElementSibling.firstChild.focus();
+                            }
+                        }else if(e.keyCode == 39) {
+                            e.preventDefault();
+                            const modal = document.getElementById('modal');
+                            modal.classList.add('active');
+                            const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
+                            const playerHeight = Math.round(playerWidth * 9 / 16);
+
+                            const time = times[e.target.getAttribute('index')];
+                            new YT.Player('player', {
+                                height: playerHeight,
+                                width: playerWidth,
+                                videoId: key,
+                                playerVars: {
+                                    'start': time,
+                                    'autoplay': 1
+                                }
+                            });
+                        }else if(e.keyCode == 37 || e.keyCode == 8) {
+                            e.preventDefault();
+                            linkMenu.remove();
+                            document.body.removeEventListener('click', removeLinkMenu, false);
+                            const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
+                            target.focus();
+                        }
+                    }
+                }, false);
             }
-        });
+            linkMenu.appendChild(linkList);
+            document.body.appendChild(linkMenu);
+            linkMenu.querySelector('a').focus();
+
+            const playButton = listItem.querySelector('.list-button[command="play"]');
+            const clientRect = playButton.getBoundingClientRect();
+            linkMenu.style.top = Math.min(clientRect.top + playButton.clientHeight, document.body.clientHeight - linkMenu.clientHeight) + 'px';
+            linkMenu.style.left = Math.min(clientRect.left, document.body.clientWidth - linkMenu.clientWidth) + 'px';
+
+            document.body.addEventListener('click', removeLinkMenu, false);
+            function removeLinkMenu(e) {
+                console.log(e);
+                let target = e.target;
+                while (target && (target != document.body)) {
+                    if (target.classList.contains('list-button') && target.parentNode.getAttribute('index') == index.toString()) return;
+                    target = target.parentNode;
+                }
+                linkMenu.remove();
+                document.body.removeEventListener('click', removeLinkMenu, false);
+            }
+        }
     }
     closeEmbeddedPlayer() {
         const modal = document.getElementById('modal');
@@ -555,7 +655,8 @@ class Main {
         listItem.setAttribute('index', result.index);
         listItem.setAttribute('site', result.site);
         listItem.setAttribute('key', result.key);
-        listItem.setAttribute('time', times[0] || 0);
+        listItem.setAttribute('anker', ankers.join(', ') || 0);
+        listItem.setAttribute('time', times.join(', ') || 0);
         listItem.innerHTML = `<a class="link-button" href="${urls[0]}" target="_blank" rel="noopener" title="${tooltipArray.join('\n')}"><img class="thumbnail" src="${thumbnailSrc}" key="${result.key}"><div class="title-container"><div class="title">${result.string}</div><div class="detail"><span class="site-icon ${result.site}"></span>${detailArray.join(' - ') || urls[0]}</div></div></a><span class="list-button material-icons" command="play">play_arrow</span>`;
         /*
         let title = listItem.querySelector('.title');
@@ -574,6 +675,7 @@ class Main {
             const listItem = e.target.parentNode;
             this.playEmbeddedPlayer(listItem);
         }, false);
+
         const linkButton = listItem.querySelector('.link-button');
         linkButton.addEventListener('click', e => {
             this.focusIndex = parseInt(e.target.parentNode.getAttribute('index'));
