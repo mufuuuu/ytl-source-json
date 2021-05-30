@@ -247,16 +247,10 @@ textarea:not([readonly]):focus + .underline .focused {
   outline: none;
 }
 
-.link-button:focus-within::before,
-.link-list-item-button:focus-within::before {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  border: 2px solid grey;
+.list-item:focus-within,
+.link-list-item:focus-within {
+  background-image: linear-gradient(to bottom, grey 2px, transparent 2px calc(100% - 2px), grey calc(100% - 2px)),
+                    linear-gradient(to right, grey 2px, transparent 2px calc(100% - 2px), grey calc(100% - 2px));
 }
 
 .link-button {
