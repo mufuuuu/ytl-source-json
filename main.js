@@ -321,7 +321,7 @@ class Main {
         const index = listItem.getAttribute('index');
         const site = listItem.getAttribute('site');
         const key = listItem.getAttribute('key');
-        const ankers = listItem.getAttribute('anker').split(', ');
+        const anchors = listItem.getAttribute('anchor').split(', ');
         const times = listItem.getAttribute('time').split(', ');
         if(times.length == 1) {
             this.openEmbeddedPlayer(listItem);
@@ -339,7 +339,7 @@ class Main {
                 a.className = 'link-list-item-button';
                 a.href = '#';
                 a.setAttribute('index', i);
-                a.textContent = ankers[i];
+                a.textContent = anchors[i];
                 linkListItem.appendChild(a);
                 linkList.appendChild(linkListItem);
                 a.addEventListener('click', e => {
@@ -583,11 +583,11 @@ class Main {
     addItem(isReverse, result, json) {
         const regex = new RegExp('(?:(\\d+)\\:)?([0-5]?\\d)\\:([0-5]\\d)(?![\\d<])', 'g');
         let regexResult;
-        const ankers = [];
+        const anchors = [];
         const urls = [];
         const times = [];
         while((regexResult = regex.exec(result.string)) !== null) {
-            ankers.push(regexResult[0]);
+            anchors.push(regexResult[0]);
             const time = parseInt(regexResult[1] || 0) * 3600 + parseInt(regexResult[2]) * 60 + parseInt(regexResult[3]);
             times.push(time);
             switch (result.site) {
@@ -658,7 +658,7 @@ class Main {
         listItem.setAttribute('index', result.index);
         listItem.setAttribute('site', result.site);
         listItem.setAttribute('key', result.key);
-        listItem.setAttribute('anker', ankers.join(', ') || 0);
+        listItem.setAttribute('anchor', anchors.join(', ') || 0);
         listItem.setAttribute('time', times.join(', ') || 0);
         listItem.innerHTML = `<a class="link-button" href="${urls[0]}" target="_blank" rel="noopener" title="${tooltipArray.join('\n')}"><img class="thumbnail" src="${thumbnailSrc}" key="${result.key}"><div class="title-container"><div class="title">${result.string}</div><div class="detail"><span class="site-icon ${result.site}"></span>${detailArray.join(' - ') || urls[0]}</div></div></a><span class="list-button material-icons" command="play">play_arrow</span>`;
         /*
@@ -698,7 +698,7 @@ class Main {
                     a.href = urls[i];
                     a.target = '_blank';
                     a.rel = 'noopener';
-                    a.textContent = ankers[i];
+                    a.textContent = anchors[i];
                     linkListItem.appendChild(a);
                     linkList.appendChild(linkListItem);
                     a.addEventListener('keydown', e => {
