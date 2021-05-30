@@ -155,7 +155,7 @@ class Main {
                 }else if(e.keyCode == 80) {
                     e.preventDefault();
                     const listItem = e.target.parentNode;
-                    this.playEmbeddedPlayer(listItem);
+                    this.openEmbeddedMenu(listItem);
                 }
             }
         });
@@ -233,7 +233,7 @@ class Main {
         });
         const modal = document.getElementById('modal');
         modal.addEventListener('click', e => {
-            this.closeEmbeddedPlayer();
+            if(e.target.id == 'modal') this.closeEmbeddedPlayer();
         });
     }
     focus(select) {
@@ -315,29 +315,16 @@ class Main {
             }
         }
     }
-    playEmbeddedPlayer(listItem) {
+    openEmbeddedMenu(listItem) {
         this.closeEmbeddedPlayer();
 
         const index = listItem.getAttribute('index');
+        const site = listItem.getAttribute('site');
         const key = listItem.getAttribute('key');
         const ankers = listItem.getAttribute('anker').split(', ');
         const times = listItem.getAttribute('time').split(', ');
         if(times.length == 1) {
-            const modal = document.getElementById('modal');
-            modal.classList.add('active');
-            const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
-            const playerHeight = Math.round(playerWidth * 9 / 16);
-
-            const time = times[0];
-            new YT.Player('player', {
-                height: playerHeight,
-                width: playerWidth,
-                videoId: key,
-                playerVars: {
-                    'start': time,
-                    'autoplay': 1
-                }
-            });
+            this.openEmbeddedPlayer(listItem);
         }else {
             let linkMenu = document.getElementById('link-menu');
             if(linkMenu) linkMenu.remove();
@@ -361,21 +348,7 @@ class Main {
                     document.body.removeEventListener('click', removeLinkMenu, false);
                     const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
                     target.focus();
-                    const modal = document.getElementById('modal');
-                    modal.classList.add('active');
-                    const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
-                    const playerHeight = Math.round(playerWidth * 9 / 16);
-
-                    const time = times[e.target.getAttribute('index')];
-                    new YT.Player('player', {
-                        height: playerHeight,
-                        width: playerWidth,
-                        videoId: key,
-                        playerVars: {
-                            'start': time,
-                            'autoplay': 1
-                        }
-                    });
+                    this.openEmbeddedPlayer(listItem, e.target.getAttribute('index'));
                 }, false);
                 a.addEventListener('keydown', e => {
                     if(e.target.className == 'link-list-item-button') {
@@ -395,21 +368,7 @@ class Main {
                             document.body.removeEventListener('click', removeLinkMenu, false);
                             const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
                             target.focus();
-                            const modal = document.getElementById('modal');
-                            modal.classList.add('active');
-                            const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.8);
-                            const playerHeight = Math.round(playerWidth * 9 / 16);
-
-                            const time = times[e.target.getAttribute('index')];
-                            new YT.Player('player', {
-                                height: playerHeight,
-                                width: playerWidth,
-                                videoId: key,
-                                playerVars: {
-                                    'start': time,
-                                    'autoplay': 1
-                                }
-                            });
+                            this.openEmbeddedPlayer(listItem, e.target.getAttribute('index'));
                         }else if(e.keyCode == 37 || e.keyCode == 27 || e.keyCode == 8) {
                             e.preventDefault();
                             linkMenu.remove();
@@ -441,10 +400,47 @@ class Main {
             }
         }
     }
+    openEmbeddedPlayer(listItem, timeindex) {
+        this.closeEmbeddedPlayer();
+
+        const site = listItem.getAttribute('site');
+        const key = listItem.getAttribute('key');
+        const time = listItem.getAttribute('time').split(', ')[timeindex || 0];
+
+        const modal = document.getElementById('modal');
+        modal.classList.add('active');
+
+        const playerWidth = Math.round(Math.min(modal.clientWidth, modal.clientHeight * 16 / 9) * 0.7);
+        const playerHeight = Math.round(playerWidth * 9 / 16);
+
+        const YTPlayer = new YT.Player('player', {
+            height: playerHeight,
+            width: playerWidth,
+            videoId: key,
+            playerVars: {
+                'start': time,
+                'autoplay': 1
+            }
+        });
+
+        const timestampContainer = document.querySelector('#timestamp');
+        const timestampString = this.json[site][key].timestamp || this.json[site][key];
+        timestampContainer.innerHTML = timestampString.replace(/(?:(\d+)\:)?([0-5]?\d)\:([0-5]\d)(?![\d<])/g, ($0, h, m, s) => {
+            let time = parseInt(h || 0) * 3600 + parseInt(m) * 60 + parseInt(s);
+            return `<a class="timestamp-anchor" href="https://www.youtube.com/watch?v=${key}&amp;t=${time}s" dir="auto" time="${time}">${$0}</a>`;
+        });
+        const anchors = Array.from(timestampContainer.querySelectorAll('.timestamp-anchor'));
+        anchors.forEach(anchor => {
+            anchor.addEventListener('click', e => {
+                e.preventDefault();
+                YTPlayer.seekTo(parseInt(e.target.getAttribute('time')));
+            }, false);
+        });
+    }
     closeEmbeddedPlayer() {
         const modal = document.getElementById('modal');
         modal.classList.remove('active');
-        modal.innerHTML = '<div id="player"></div>';
+        modal.innerHTML = '<div id="player"></div><div id="timestamp"></div>';
     }
     exec(searchParameters) {
         const channelPreset = ['Siro Channel', '木曽あずき', '花京院ちえり', 'もこ田めめめ', '牛巻りこ', '北上双葉', 'カルロ・ピノ', '八重沢なとり', '金剛いろは', 'ヤマト イオリ', '神楽すず', 'メリーミルクの森', '七星みりり', 'リクム', 'ルルン・ルルリカ', '【世界初?!】男性バーチャルYouTuber ばあちゃる', 'どっとライブ', '夜桜たま', '猫乃木もち'];
@@ -680,7 +676,7 @@ class Main {
         const playButton = listItem.querySelector('.list-button[command="play"]');
         playButton.addEventListener('click', e => {
             const listItem = e.target.parentNode;
-            this.playEmbeddedPlayer(listItem);
+            this.openEmbeddedMenu(listItem);
         }, false);
 
         const linkButton = listItem.querySelector('.link-button');

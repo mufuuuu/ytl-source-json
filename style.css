@@ -432,3 +432,48 @@ textarea:not([readonly]):focus + .underline .focused {
   justify-content: center;
   align-items: center;
 }
+
+#modal #player {
+  --player-width: calc(min(100vw, calc(100vh * 16 / 9)) * 0.7);
+  --player-height: calc(var(--player-width) * 9 / 16);
+  width: var(--player-width) !important;
+  height: var(--player-height) !important;
+  flex-shrink: 0;
+}
+
+#modal #timestamp {
+  padding: 16px;
+  max-height: 100vh;
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  color: white;
+  overflow: auto;
+}
+
+#modal #timestamp .timestamp-anchor {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+#modal #timestamp .timestamp-anchor:hover {
+  text-decoration: underline;
+}
+
+
+@media (max-width: 800px), (max-aspect-ratio: 1/1) {
+  #modal {
+    flex-direction: column;
+  }
+
+  #modal #player {
+    --player-width: calc(min(100vw, calc(100vh * 16 / 9)) * 0.9);
+    --player-height: calc(var(--player-width) * 9 / 16);
+    width: var(--player-width) !important;
+    height: var(--player-height) !important;
+  }
+  
+  #modal #timestamp {
+    width: 90%;
+  }
+}
