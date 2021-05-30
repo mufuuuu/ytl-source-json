@@ -15,7 +15,7 @@ class Main {
     }
     load() {
         const url = 'https://raw.githubusercontent.com/mufuuuu/ytl-source-json/master/timestamp.json';
-        fetch(url, {cache: 'no-cache'})
+        fetch(url, {mode: 'no-cors', cache: 'no-cache'})
             .then(response => {
             if(response.ok) {
                 return response.json();
