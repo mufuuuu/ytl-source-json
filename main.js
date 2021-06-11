@@ -149,9 +149,6 @@ class Main {
                         e.preventDefault();
                         target.focus();
                     }
-                }else if(e.keyCode == 39) {
-                    e.preventDefault();
-                    e.target.click();
                 }else if(e.keyCode == 80) {
                     e.preventDefault();
                     const listItem = e.target.parentNode;
@@ -362,14 +359,7 @@ class Main {
                                 e.preventDefault();
                                 e.target.parentNode.previousElementSibling.firstChild.focus();
                             }
-                        }else if(e.keyCode == 39) {
-                            e.preventDefault();
-                            linkMenu.remove();
-                            document.body.removeEventListener('click', removeLinkMenu, false);
-                            const target = document.querySelector(`#search-list .list-item[index="${this.focusIndex}"] .link-button`);
-                            target.focus();
-                            this.openEmbeddedPlayer(listItem, e.target.getAttribute('index'));
-                        }else if(e.keyCode == 37 || e.keyCode == 27 || e.keyCode == 8) {
+                        }else if(e.keyCode == 27 || e.keyCode == 8) {
                             e.preventDefault();
                             linkMenu.remove();
                             document.body.removeEventListener('click', removeLinkMenu, false);
@@ -713,10 +703,7 @@ class Main {
                                     e.preventDefault();
                                     e.target.parentNode.previousElementSibling.firstChild.focus();
                                 }
-                            }else if(e.keyCode == 39) {
-                                e.preventDefault();
-                                e.target.click();
-                            }else if(e.keyCode == 37 || e.keyCode == 27 || e.keyCode == 8) {
+                            }else if(e.keyCode == 27 || e.keyCode == 8) {
                                 e.preventDefault();
                                 linkMenu.remove();
                                 document.body.removeEventListener('click', removeLinkMenu, false);
